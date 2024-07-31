@@ -28,6 +28,7 @@ IntegralsArblibExt = "Arblib"
 IntegralsCubaExt = "Cuba"
 IntegralsCubatureExt = "Cubature"
 IntegralsFastGaussQuadratureExt = "FastGaussQuadrature"
+IntegralsGaussTuranExt = "ForwardDiff"
 IntegralsForwardDiffExt = "ForwardDiff"
 IntegralsMCIntegrationExt = "MCIntegration"
 IntegralsZygoteExt = ["Zygote", "ChainRulesCore"]
