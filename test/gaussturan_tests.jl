@@ -4,7 +4,7 @@ using Integrals
 
 a, b = 0.0, π
 
-result = solve(IntegralProblem((x, p) -> sin(x), (0, π)), GaussTuran(5, 2, ForwardDiff))
+result = solve(IntegralProblem((x, p) -> sin(x), (0, π)), GaussTuran(5, 2, ForwardDiff)).u
 
 expected_result = 2.0
 

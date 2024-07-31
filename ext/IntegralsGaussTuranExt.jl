@@ -1,13 +1,8 @@
-module IntegralsGaussTuran
+module IntegralsGaussTuranExt
 
 using ForwardDiff
 using Integrals
-# Defining the GaussTuran struct
-struct GaussTuran{B} <: SciMLBase.AbstractIntegralAlgorithm
-    n::Int # number of points
-    s::Int # order of derivative
-    ad_backend::B # for now ForwardDiff
-end
+
 
 const xgt51 = [0.171573532582957e-02,
                0.516674690067835e-01,
@@ -31,15 +26,15 @@ function gt51(f, a, b)
     for i in 1:5
         # Map the nodes to the interval [a, b]
         xi = xgt51[i] * factor + a
-        
+
         # Compute function value and derivatives at xi using ForwardDiff
         fi = f(xi)
         dfi = ForwardDiff.derivative(f, xi) * factor
         d2fi = ForwardDiff.derivative(x -> ForwardDiff.derivative(f, x), xi) * factor^2
-        
+
         # Get the weights
         Ai1, Ai2, Ai3 = agt51[i]
-        
+
         # Accumulate the result
         res += Ai1 * fi + Ai2 * dfi + Ai3 * d2fi
     end
@@ -48,14 +43,15 @@ function gt51(f, a, b)
 end
 
 # Integrals.__solvebp_call for GaussTuran
-function Integrals.__solvebp_call(prob::IntegralProblem, 
-    alg::GaussTuran, 
-    sensealg, domain, p; 
-    reltol=nothing, abstol=nothing, 
+function Integrals.__solvebp_call(prob::IntegralProblem,
+    alg::GaussTuran,
+    sensealg, domain, p;
+    reltol=nothing, abstol=nothing,
     maxiters=nothing)
     integrand = prob.f
     a, b = domain
-    return gt51((x) -> integrand(x, p), a, b)
+    val = gt51((x) -> integrand(x, p), a, b)
+    SciMLBase.build_solution(prob, alg, val, nothing, retcode = ReturnCode.Success)
 end
 
 end # module
